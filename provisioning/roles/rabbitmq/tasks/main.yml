@@ -1,0 +1,25 @@
+---
+- name: Install RabbitMQ
+  apt:
+    update_cache=yes
+    name=rabbitmq-server
+    state=present
+
+- name: Create administrator account
+  rabbitmq_user:
+    user: admin
+    password: qwe123
+    tags: administrator
+    permissions:
+      - vhost: /
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+    state: present
+
+- name: Enable management web UI
+  rabbitmq_plugin:
+    names=rabbitmq_management
+    state=enabled
+  notify:
+    - restart rabbitmq server

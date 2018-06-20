@@ -1,0 +1,13 @@
+---
+- hosts: default
+  roles:
+    - rabbitmq
+  tasks:
+    - name: Install packages
+      apt:
+        update_cache=yes
+        state=present
+        name={{ item }}
+      with_items:
+        - vim
+        - htop

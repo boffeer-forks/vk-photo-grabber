@@ -1,0 +1,9 @@
+### Ansible template
+*.retry
+
+### Vagrant template
+.vagrant/
+
+### JetBrains template
+.idea
+
