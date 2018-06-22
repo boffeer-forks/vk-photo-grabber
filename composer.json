@@ -1,0 +1,13 @@
+{
+    "name": "yevgen-grytsay/vk-photo-grabber",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yevhen Hrytsai",
+            "email": "yevgen.grytsay@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
