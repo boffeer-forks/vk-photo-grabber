@@ -16,3 +16,6 @@
         - htop
         - php
         - git
+        - zip
+        - php-bcmath
+        - php-mbstring

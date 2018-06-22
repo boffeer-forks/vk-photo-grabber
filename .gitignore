@@ -1,5 +1,6 @@
 ### Ansible template
 *.retry
+provisioning/vars.yml
 
 ### Vagrant template
 .vagrant/
@@ -7,5 +8,5 @@
 ### JetBrains template
 .idea
 
-
+### Composer
 /vendor/

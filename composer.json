@@ -9,5 +9,10 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "php": ">=7.0",
+        "ext-bcmath": "*",
+        "ext-mbstring": "*",
+        "enqueue/amqp-lib": "^0.8.23"
+    }
 }
