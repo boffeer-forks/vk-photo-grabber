@@ -76,6 +76,50 @@ class VkClient
     }
 
     /**
+     * @param int $userId
+     * @param int $albumId
+     * @param int $count
+     * @param int $offset
+     * @return mixed
+     * @throws \VK\Exceptions\VKApiException
+     * @throws \VK\Exceptions\VKClientException
+     */
+    public function getPhotosPage(int $userId, int $albumId, int $count, int $offset = 0)
+    {
+        return $this->apiClient
+            ->photos()
+            ->get($this->accessToken, [
+                'rev'      => self::ORDER_CHRONOLOGICAL,
+                'owner_id' => $userId,
+                'album_id' => $albumId,
+                'offset'   => $offset,
+                'count'    => $count
+            ]);
+    }
+
+    /**
+     * @param int $userId
+     * @param int $albumId
+     * @param int $count
+     * @param int $offset
+     * @return \Generator
+     * @throws \VK\Exceptions\VKApiException
+     * @throws \VK\Exceptions\VKClientException
+     */
+    public function iteratePhotos(int $userId, int $albumId, int $count, int $offset = 0)
+    {
+        while (true) {
+            $photos = $this->getPhotosPage($userId, $albumId, $count, $offset);
+            if (!$photos['items']) {
+                break;
+            }
+
+            yield from $photos['items'];
+            $offset += $count;
+        }
+    }
+
+    /**
      * @param int $vkUserId
      * @return mixed
      * @throws \VK\Exceptions\VKApiException
