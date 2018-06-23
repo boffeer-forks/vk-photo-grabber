@@ -7,6 +7,8 @@ use VK\Client\VKApiClient;
 
 class VkClient
 {
+    public const ORDER_CHRONOLOGICAL = 0;
+    public const ORDER_REVERSE_CHRONOLOGICAL = 1;
     /**
      * @var VKApiClient
      */
@@ -52,6 +54,38 @@ class VkClient
         $uploader = new VkImageUploader($this->getImageUploadServerUrl($albumId));
         $data = $uploader->upload($fileName);
         $this->saveUploadedImage($data);
+    }
+
+    /**
+     * @param int $userId
+     * @param int $albumId
+     * @param int $order
+     * @return mixed
+     * @throws \VK\Exceptions\VKApiException
+     * @throws \VK\Exceptions\VKClientException
+     */
+    public function getPhotos(int $userId, int $albumId, int $order = self::ORDER_CHRONOLOGICAL)
+    {
+        return $this->apiClient
+            ->photos()
+            ->get($this->accessToken, [
+                'rev'      => $order,
+                'owner_id' => $userId,
+                'album_id' => $albumId,
+            ]);
+    }
+
+    /**
+     * @param int $vkUserId
+     * @return mixed
+     * @throws \VK\Exceptions\VKApiException
+     * @throws \VK\Exceptions\VKClientException
+     */
+    public function getAlbums(int $vkUserId)
+    {
+        return $this->apiClient
+            ->photos()
+            ->getAlbums($this->accessToken, ['owner_id' => $vkUserId]);
     }
 
     /**
