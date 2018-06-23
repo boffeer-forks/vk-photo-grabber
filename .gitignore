@@ -1,6 +1,6 @@
 ### Ansible template
 *.retry
-provisioning/vars.yml
+provisioning/vars/local.yml
 
 ### Vagrant template
 .vagrant/

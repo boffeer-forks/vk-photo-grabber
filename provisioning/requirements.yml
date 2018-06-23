@@ -1,2 +1,6 @@
 ---
  - src: geerlingguy.composer
+
+ - src: geerlingguy.php
+
+ - src: geerlingguy.php-versions

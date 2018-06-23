@@ -1,0 +1,7 @@
+---
+php_version: '7.1'
+php_packages:
+  - php-bcmath
+  - php-mbstring
+php_enable_webserver: false
+php_enable_php_fpm: false

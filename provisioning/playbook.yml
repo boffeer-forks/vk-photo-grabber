@@ -1,10 +1,13 @@
 ---
 - hosts: default
   vars_files:
-      - vars.yml
+      - vars/main.yml
+      - vars/local.yml
   roles:
     - rabbitmq
     - geerlingguy.composer
+    - geerlingguy.php-versions
+    - geerlingguy.php
   tasks:
     - name: Install packages
       apt:
@@ -14,8 +17,5 @@
       with_items:
         - vim
         - htop
-        - php
         - git
         - zip
-        - php-bcmath
-        - php-mbstring
