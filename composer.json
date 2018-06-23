@@ -13,6 +13,7 @@
         "php": ">=7.0",
         "ext-bcmath": "*",
         "ext-mbstring": "*",
-        "enqueue/amqp-lib": "^0.8.23"
+        "enqueue/amqp-lib": "^0.8.23",
+        "vkcom/vk-php-sdk": "^0.2.0"
     }
 }
