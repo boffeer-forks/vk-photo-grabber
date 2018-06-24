@@ -35,13 +35,28 @@ class UserProcessor implements PsrProcessor
     public function process(PsrMessage $message, PsrContext $context)
     {
         $vkUserId = JSON::decode($message->getBody());
-        $response = $this->client->getAlbums($vkUserId);
-        $vkAlbums = $response['items'];
+        $vkAlbums = $this->getAlbums($vkUserId);
 
         array_walk($vkAlbums, function ($album) {
             $this->albumQueue->send(JSON::encode($album));
         });
 
         return self::ACK;
+    }
+
+    /**
+     * @param int $vkUserId
+     * @return array
+     * @throws \VK\Exceptions\VKApiException
+     * @throws \VK\Exceptions\VKClientException
+     */
+    private function getAlbums($vkUserId)
+    {
+        $response = $this->client->getAlbums($vkUserId);
+        $vkAlbums = $response['items'];
+
+        return array_filter($vkAlbums, function (array $album) {
+            return $album['size'] > 0;
+        });
     }
 }

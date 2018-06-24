@@ -1,0 +1,49 @@
+parameters:
+    app_vk_client.service_token: 474aacae474aacae474aacae04472e47ec4474a474aacae1c649ecbe6db860967ea9d3b
+    app_vk_client.app_id: 6613826
+    queue.user: vk-user-queue
+    queue.album: vk-album-queue
+    queue.photo: vk-photo-queue
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    amqp_connection_factory:
+        class: Enqueue\AmqpLib\AmqpConnectionFactory
+        arguments:
+            - {host: 'localhost', port: 5672, vhost: '/', user: 'admin', pass: 'qwe123'}
+
+    Enqueue\AmqpLib\AmqpConnectionFactory: '@amqp_connection_factory'
+
+    vk_api_client:
+        class: VK\Client\VKApiClient
+
+    VK\Client\VKApiClient: '@vk_api_client'
+
+    Interop\Queue\PsrContext:
+        factory: 'Enqueue\AmqpLib\AmqpConnectionFactory:createContext'
+
+    album_queue:
+        factory: 'Interop\Queue\PsrContext:createQueue'
+        arguments: ['%queue.album%']
+
+    album_out_channel:
+        class: app\OutChannel
+        arguments:
+            - '@Interop\Queue\PsrContext'
+            - '@album_queue'
+
+    user_processor:
+        class: app\UserProcessor
+        arguments:
+            - '@app_vk_client'
+            - '@album_out_channel'
+
+    app_vk_client:
+        class: app\VkClient
+        arguments:
+            $apiClient: '@vk_api_client'
+            $accessToken: '%app_vk_client.service_token%'

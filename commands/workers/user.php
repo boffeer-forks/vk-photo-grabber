@@ -6,34 +6,24 @@ use Enqueue\AmqpLib\AmqpConnectionFactory;
 use Enqueue\Consumption\ChainExtension;
 use Enqueue\Consumption\Extension\SignalExtension;
 use Enqueue\Consumption\QueueConsumer;
-use VK\Client\VKApiClient;
-use app\VkClient;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-$connectionFactory = new AmqpConnectionFactory([
-    'host'  => 'localhost',
-    'port'  => 5672,
-    'vhost' => '/',
-    'user'  => 'admin',
-    'pass'  => 'qwe123',
-]);
+$containerBuilder = new ContainerBuilder();
+$loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__.'/../../config'));
+$loader->load('services.yaml');
+
+/** @var AmqpConnectionFactory $connectionFactory */
+$connectionFactory = $containerBuilder->get('amqp_connection_factory');
+/** @var UserProcessor $processor */
+$processor = $containerBuilder->get('user_processor');
+
 
 /** @var \Enqueue\AmqpLib\AmqpContext $psrContext */
 $psrContext = $connectionFactory->createContext();
 $queueConsumer = new QueueConsumer($psrContext, new ChainExtension([
     new SignalExtension()
 ]));
-
-/**
- * Processor
- */
-$vkAlbumQueue = $psrContext->createQueue('vk-album-queue');
-$psrContext->declareQueue($vkAlbumQueue);
-$albumQueue = new \app\OutChannel($psrContext, $vkAlbumQueue);
-
-$vkConfig = require_once __DIR__.'/../../app/examples/vk-sdk/config.php';
-$vk = new VkClient(new VKApiClient(), $vkConfig['service_token']);
-$processor = new UserProcessor($vk, $albumQueue);
-
-
-$queueConsumer->bind('vk-user-queue', $processor);
+$queueConsumer->bind($containerBuilder->getParameter('queue.user'), $processor);
 $queueConsumer->consume();

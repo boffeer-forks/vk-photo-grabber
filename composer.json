@@ -15,7 +15,10 @@
         "ext-mbstring": "*",
         "enqueue/amqp-lib": "^0.8.23",
         "vkcom/vk-php-sdk": "^0.2.0",
-        "enqueue/enqueue": "^0.8.29"
+        "enqueue/enqueue": "^0.8.29",
+        "symfony/dependency-injection": "^4.1",
+        "symfony/yaml": "^4.1",
+        "symfony/config": "^4.1"
     },
     "require-dev": {
         "bheller/images-generator": "~1.0"
