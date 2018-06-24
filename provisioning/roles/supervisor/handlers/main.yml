@@ -1,0 +1,5 @@
+---
+- name: restart download worker
+  supervisorctl:
+    name="download-worker:"
+    state=restarted

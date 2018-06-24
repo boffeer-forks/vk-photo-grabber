@@ -1,0 +1,22 @@
+---
+- name: Install Supervisor
+  apt:
+    update_cache=yes
+    name=supervisor
+    state=present
+
+- name: Create log directories
+  file:
+    path: /var/log/{{ vk_grabber_app_name }}
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: Install download worker
+  template:
+    src=download-worker.conf
+    dest=/etc/supervisor/conf.d/download-worker.conf
+    backup=yes
+  notify:
+      - restart download worker

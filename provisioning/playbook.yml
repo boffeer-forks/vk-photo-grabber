@@ -8,6 +8,7 @@
     - geerlingguy.composer
     - geerlingguy.php-versions
     - geerlingguy.php
+    - supervisor
   tasks:
     - name: Install packages
       apt:
