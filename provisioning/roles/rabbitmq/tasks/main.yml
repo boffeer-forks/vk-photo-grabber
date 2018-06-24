@@ -23,3 +23,33 @@
     state=enabled
   notify:
     - restart rabbitmq server
+
+- apt:
+    update_cache=yes
+    name=python-pip
+    state=present
+
+- pip:
+    name: requests
+    state: present
+
+- name: Create user queue
+  rabbitmq_queue:
+    name: vk-user-queue
+    durable: yes
+    state: present
+  ignore_errors: yes
+
+- name: Create album queue
+  rabbitmq_queue:
+    name: vk-album-queue
+    durable: yes
+    state: present
+  ignore_errors: yes
+
+- name: Create photo queue
+  rabbitmq_queue:
+    name: vk-photo-queue
+    durable: yes
+    state: present
+  ignore_errors: yes

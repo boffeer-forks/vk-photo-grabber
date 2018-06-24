@@ -19,6 +19,23 @@ class VkImageDownloader
     }
 
     /**
+     * @param array $vkPhoto
+     * @return string
+     * @throws \RuntimeException
+     */
+    public static function extractImageUrl(array $vkPhoto): string
+    {
+        $fields = array_reverse(['photo_75', 'photo_130', 'photo_604', 'photo_807', 'photo_1280', 'photo_2560']);
+        foreach ($fields as $name) {
+            if (array_key_exists($name, $vkPhoto)) {
+                return $vkPhoto[$name];
+            }
+        }
+
+        throw new \RuntimeException('Url not found. Possibly wrong data format.');
+    }
+
+    /**
      * @param string $imageUrl
      * @param int $vkUserId
      * @param int $vkAlbumId

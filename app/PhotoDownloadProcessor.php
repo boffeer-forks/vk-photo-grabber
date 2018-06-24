@@ -28,8 +28,8 @@ class PhotoDownloadProcessor implements PsrProcessor
     public function process(PsrMessage $message, PsrContext $context)
     {
         // TODO: log
-        $body = json_decode($message->getBody(), true);
-        $this->downloader->download($body['url'], $body['vk_user_id'], $body['vk_album_id'], $body['vk_photo_id']);
+        $vkPhoto = json_decode($message->getBody(), true);
+        $this->downloader->download(VkImageDownloader::extractImageUrl($vkPhoto), $vkPhoto['owner_id'], $vkPhoto['album_id'], $vkPhoto['id']);
 
         return self::ACK;
     }
