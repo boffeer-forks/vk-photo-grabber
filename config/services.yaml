@@ -54,6 +54,10 @@ services:
         factory: 'Interop\Queue\PsrContext:createQueue'
         arguments: ['%queue.photo%']
 
+    user_queue:
+        factory: 'Interop\Queue\PsrContext:createQueue'
+        arguments: ['%queue.user%']
+
     album_out_channel:
         class: app\OutChannel
         arguments:
@@ -65,6 +69,12 @@ services:
         arguments:
             - '@Interop\Queue\PsrContext'
             - '@photo_queue'
+
+    user_out_channel:
+        class: app\OutChannel
+        arguments:
+            - '@Interop\Queue\PsrContext'
+            - '@user_queue'
 
     user_processor:
         class: app\UserProcessor
@@ -135,3 +145,8 @@ services:
         class: app\commands\AlbumPhotoListCommand
         arguments:
             $storage: '@storage'
+
+    command_enqueue_user:
+        class: app\commands\EnqueueUserCommand
+        arguments:
+            $userQueue: '@user_out_channel'

@@ -19,5 +19,6 @@ $application->add($containerBuilder->get('command_start_photo_worker'));
 $application->add($containerBuilder->get('command_user_list'));
 $application->add($containerBuilder->get('command_user_album_list'));
 $application->add($containerBuilder->get('command_album_photo_list'));
+$application->add($containerBuilder->get('command_enqueue_user'));
 
 $application->run();
