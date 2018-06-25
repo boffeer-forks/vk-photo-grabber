@@ -150,3 +150,8 @@ services:
         class: app\commands\EnqueueUserCommand
         arguments:
             $userQueue: '@user_out_channel'
+
+    command_batch_enqueue_user:
+        class: app\commands\BatchEnqueueUserCommand
+        arguments:
+            $userQueue: '@user_out_channel'
