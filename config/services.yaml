@@ -93,7 +93,6 @@ services:
         class: app\VkImageDownloader
         arguments:
             - '%app.images_download_dir%'
-#        class: new VkImageDownloader(__DIR__.'/../../temp/downloads/img')
 
     photo_processor:
         class: app\PhotoProcessor
