@@ -5,6 +5,9 @@ parameters:
     queue.album: vk-album-queue
     queue.photo: vk-photo-queue
     app.images_download_dir: '/home/vagrant/vk-photo-grabber/temp/downloads/img'
+    app.db.dsn: 'mysql:dbname=vk_photo_grabber;host=localhost;'
+    app.db.username: vk_photo_grabber_u
+    app.db.password: qwe123
 
 services:
     _defaults:
@@ -22,6 +25,18 @@ services:
             - {host: 'localhost', port: 5672, vhost: '/', user: 'admin', pass: 'qwe123'}
 
     Enqueue\AmqpLib\AmqpConnectionFactory: '@amqp_connection_factory'
+
+    db:
+        class: app\Db
+        arguments:
+            - '%app.db.dsn%'
+            - '%app.db.username%'
+            - '%app.db.password%'
+
+    storage:
+        class: app\Storage
+        arguments:
+            - '@db'
 
     vk_api_client:
         class: VK\Client\VKApiClient
@@ -56,6 +71,7 @@ services:
         arguments:
             - '@app_vk_client'
             - '@album_out_channel'
+            - '@storage'
 
     album_processor:
         class: app\AlbumProcessor

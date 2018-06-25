@@ -9,6 +9,7 @@
     - geerlingguy.php-versions
     - geerlingguy.php
     - supervisor
+    - mysql
   tasks:
     - name: Install packages
       apt:

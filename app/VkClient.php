@@ -149,4 +149,21 @@ class VkClient
                 'hash'        => $uploadData['hash']
             ]);
     }
+
+    /**
+     * @param int $vkUserId
+     * @return mixed
+     * @throws \VK\Exceptions\VKApiException
+     * @throws \VK\Exceptions\VKClientException
+     */
+    public function getUser(int $vkUserId)
+    {
+        $userList = $this->apiClient
+            ->users()
+            ->get($this->accessToken, [
+                'user_ids' => [$vkUserId],
+            ]);
+
+        return reset($userList);
+    }
 }

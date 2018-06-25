@@ -1,0 +1,23 @@
+---
+- name: Install MySQL
+  apt:
+    update_cache=yes
+    name=mysql-server
+    state=present
+
+- apt:
+    update_cache: yes
+    name: python-mysqldb
+    state: present
+
+- name: Create database for grabber
+  mysql_db:
+    name=vk_photo_grabber
+    collation=utf8_general_ci
+
+- name: Create db user for grabber
+  mysql_user:
+    name: vk_photo_grabber_u
+    state: present
+    password: qwe123
+    priv: 'vk_photo_grabber.*:ALL'

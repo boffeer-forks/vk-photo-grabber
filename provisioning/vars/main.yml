@@ -3,6 +3,7 @@ php_version: '7.1'
 php_packages_extra:
   - php7.1-bcmath
   - php7.1-mbstring
+  - php7.1-mysql
 php_enable_webserver: false
 php_enable_php_fpm: false
 
