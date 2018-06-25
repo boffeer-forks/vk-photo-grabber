@@ -4,12 +4,17 @@ parameters:
     queue.user: vk-user-queue
     queue.album: vk-album-queue
     queue.photo: vk-photo-queue
+    app.images_download_dir: '/home/vagrant/vk-photo-grabber/temp/downloads/img'
 
 services:
     _defaults:
         autowire: true
         autoconfigure: true
         public: false
+
+#    app\commands\:
+#        resource: '../app/commands/*'
+#        tags: [console.command]
 
     amqp_connection_factory:
         class: Enqueue\AmqpLib\AmqpConnectionFactory
@@ -30,11 +35,21 @@ services:
         factory: 'Interop\Queue\PsrContext:createQueue'
         arguments: ['%queue.album%']
 
+    photo_queue:
+        factory: 'Interop\Queue\PsrContext:createQueue'
+        arguments: ['%queue.photo%']
+
     album_out_channel:
         class: app\OutChannel
         arguments:
             - '@Interop\Queue\PsrContext'
             - '@album_queue'
+
+    photo_out_channel:
+        class: app\OutChannel
+        arguments:
+            - '@Interop\Queue\PsrContext'
+            - '@photo_queue'
 
     user_processor:
         class: app\UserProcessor
@@ -42,8 +57,49 @@ services:
             - '@app_vk_client'
             - '@album_out_channel'
 
+    album_processor:
+        class: app\AlbumProcessor
+        arguments:
+            - '@app_vk_client'
+            - '@photo_out_channel'
+
+    vk_image_downloader:
+        class: app\VkImageDownloader
+        arguments:
+            - '%app.images_download_dir%'
+#        class: new VkImageDownloader(__DIR__.'/../../temp/downloads/img')
+
+    photo_processor:
+        class: app\PhotoProcessor
+        arguments:
+            - '@vk_image_downloader'
+
     app_vk_client:
         class: app\VkClient
         arguments:
             $apiClient: '@vk_api_client'
             $accessToken: '%app_vk_client.service_token%'
+
+    command_start_user_worker:
+        class: app\commands\StartWorkerCommand
+        arguments:
+            $name: 'worker:start-user-worker'
+            $psrContext: '@Interop\Queue\PsrContext'
+            $processor: '@user_processor'
+            $queueName: '%queue.user%'
+
+    command_start_album_worker:
+        class: app\commands\StartWorkerCommand
+        arguments:
+            $name: 'worker:start-album-worker'
+            $psrContext: '@Interop\Queue\PsrContext'
+            $processor: '@album_processor'
+            $queueName: '%queue.album%'
+
+    command_start_photo_worker:
+        class: app\commands\StartWorkerCommand
+        arguments:
+            $name: 'worker:start-photo-worker'
+            $psrContext: '@Interop\Queue\PsrContext'
+            $processor: '@photo_processor'
+            $queueName: '%queue.photo%'

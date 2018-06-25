@@ -7,7 +7,7 @@ use Interop\Queue\PsrContext;
 use Interop\Queue\PsrMessage;
 use Interop\Queue\PsrProcessor;
 
-class PhotoDownloadProcessor implements PsrProcessor
+class PhotoProcessor implements PsrProcessor
 {
     /**
      * @var VkImageDownloader
