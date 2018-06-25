@@ -64,4 +64,16 @@ class Db
 
         return $stmt->rowCount();
     }
+
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return mixed
+     */
+    public function queryScalar(string $sql, array $params = [])
+    {
+        $row = $this->queryOne($sql, $params);
+
+        return reset($row);
+    }
 }

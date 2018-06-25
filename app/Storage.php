@@ -96,4 +96,69 @@ class Storage
             ':vk_url'      => VkImageDownloader::extractImageUrl($vkPhoto)
         ]);
     }
+
+    /**
+     * @return array
+     */
+    public function getUsers()
+    {
+        return $this->db->queryAll('
+            SELECT *
+            FROM `user`
+        ');
+    }
+
+    /**
+     * @param int $vkUserId
+     * @return mixed
+     */
+    public function getAlbumCount(int $vkUserId)
+    {
+        // TODO: get rid of this count query and store album count directly in user table
+        return $this->db->queryScalar('
+            SELECT COUNT(*)
+            FROM `album`
+            WHERE vk_user_id = :vk_user_id
+        ', [':vk_user_id' => $vkUserId]);
+    }
+
+    /**
+     * @param int $vkUserId
+     * @return array
+     */
+    public function getUserAlbums(int $vkUserId)
+    {
+        return $this->db->queryAll('
+            SELECT *
+            FROM `album`
+            WHERE vk_user_id = :vk_user_id
+        ', [':vk_user_id' => $vkUserId]);
+    }
+
+    /**
+     * @param int $vkAlbumId
+     * @return mixed
+     */
+    public function getAlbumSize(int $vkAlbumId)
+    {
+        // TODO: get rid of this count query and store album size directly in album table
+        return $this->db->queryScalar('
+            SELECT COUNT(*)
+            FROM `photo`
+            WHERE vk_album_id = :vk_album_id
+        ', [':vk_album_id' => $vkAlbumId]);
+    }
+
+    /**
+     * @param int $vkAlbumId
+     * @return array
+     */
+    public function getPhotosFromAlbum(int $vkAlbumId)
+    {
+        return $this->db->queryAll('
+            SELECT *
+            FROM `photo`
+            WHERE vk_album_id = :vk_album_id
+        ', [':vk_album_id' => $vkAlbumId]);
+    }
 }

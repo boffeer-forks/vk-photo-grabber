@@ -120,3 +120,18 @@ services:
             $psrContext: '@Interop\Queue\PsrContext'
             $processor: '@photo_processor'
             $queueName: '%queue.photo%'
+
+    command_user_list:
+        class: app\commands\UserListCommand
+        arguments:
+            $storage: '@storage'
+
+    command_user_album_list:
+        class: app\commands\AlbumListCommand
+        arguments:
+            $storage: '@storage'
+
+    command_album_photo_list:
+        class: app\commands\AlbumPhotoListCommand
+        arguments:
+            $storage: '@storage'
