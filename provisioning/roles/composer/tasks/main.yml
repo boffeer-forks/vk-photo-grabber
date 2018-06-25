@@ -1,0 +1,5 @@
+---
+- name: Install composer packages
+  command: composer install --prefer-dist
+  args:
+    chdir: "{{ vk_grabber_dir }}"

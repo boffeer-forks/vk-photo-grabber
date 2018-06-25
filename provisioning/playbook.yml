@@ -5,9 +5,10 @@
       - vars/local.yml
   roles:
     - rabbitmq
-    - geerlingguy.composer
     - geerlingguy.php-versions
     - geerlingguy.php
+    - geerlingguy.composer
+    - composer
     - supervisor
     - mysql
   tasks:
