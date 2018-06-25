@@ -21,3 +21,9 @@
     state: present
     password: qwe123
     priv: 'vk_photo_grabber.*:ALL'
+
+- name: Restore database
+  mysql_db:
+    name: vk_photo_grabber
+    state: import
+    target: "{{ vk_grabber_dir }}/provisioning/migrations.sql"

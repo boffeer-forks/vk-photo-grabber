@@ -1,5 +1,6 @@
 ---
 composer_github_oauth_token: ''
 
+# Прокси для доступа к vk.com
 vk_grabber_http_proxy: ''
 vk_grabber_https_proxy: ''
