@@ -23,7 +23,7 @@ class Storage
     {
         $user = $this->db->queryOne('
             SELECT *
-            FROM `vk_user`
+            FROM `user`
             WHERE `vk_user_id` = :vk_user_id
         ', [
             ':vk_user_id' => $vkUser['id']
@@ -31,7 +31,7 @@ class Storage
 
         if ($user) {
             $this->db->execute('
-                UPDATE `vk_user`
+                UPDATE `user`
                 SET first_name = :first_name,
                   last_name = :last_name
                 WHERE `vk_user_id` = :vk_user_id
@@ -42,12 +42,43 @@ class Storage
             ]);
         } else {
             $this->db->execute('
-                INSERT INTO `vk_user`(vk_user_id, first_name, last_name)
+                INSERT INTO `user`(vk_user_id, first_name, last_name)
                 VALUES (:vk_user_id, :first_name, :last_name)
             ', [
                 ':vk_user_id' => $vkUser['id'],
                 ':first_name' => $vkUser['first_name'],
                 ':last_name'  => $vkUser['last_name']
+            ]);
+        }
+    }
+
+    public function saveAlbum(array $vkAlbum)
+    {
+        $user = $this->db->queryOne('
+            SELECT *
+            FROM `album`
+            WHERE `vk_album_id` = :vk_album_id
+        ', [
+            ':vk_album_id' => $vkAlbum['id']
+        ]);
+
+        if ($user) {
+            $this->db->execute('
+                UPDATE `album`
+                SET title = :title
+                WHERE `vk_album_id` = :vk_album_id
+            ', [
+                ':title'  => $vkAlbum['title'],
+                ':vk_album_id' => $vkAlbum['id']
+            ]);
+        } else {
+            $this->db->execute('
+                INSERT INTO `album`(vk_album_id, vk_user_id, title)
+                VALUES (:vk_album_id, :vk_user_id, :title)
+            ', [
+                ':vk_album_id' => $vkAlbum['id'],
+                ':vk_user_id' => $vkAlbum['owner_id'],
+                ':title'  => $vkAlbum['title']
             ]);
         }
     }

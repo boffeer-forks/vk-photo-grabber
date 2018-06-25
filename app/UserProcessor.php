@@ -48,7 +48,7 @@ class UserProcessor implements PsrProcessor
             return self::REJECT;
         }
         $this->storage->saveUser($vkUser);
-        $this->enqueueAlbums($vkUserId);
+        $this->saveAndEnqueueAlbums($vkUserId);
 
         return self::ACK;
     }
@@ -58,10 +58,11 @@ class UserProcessor implements PsrProcessor
      * @throws VKApiException
      * @throws \VK\Exceptions\VKClientException
      */
-    private function enqueueAlbums($vkUserId)
+    private function saveAndEnqueueAlbums($vkUserId)
     {
         $vkAlbums = $this->getAlbums($vkUserId);
         array_walk($vkAlbums, function ($album) {
+            $this->storage->saveAlbum($album);
             $this->albumQueue->send(JSON::encode($album));
         });
     }
