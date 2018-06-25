@@ -13,10 +13,16 @@
     group: vagrant
     mode: 0755
 
-- name: Install download worker
+- name: Install workers
   template:
-    src=download-worker.conf
-    dest=/etc/supervisor/conf.d/download-worker.conf
+    src={{ item.src }}
+    dest={{ item.dest }}
     backup=yes
+  with_items:
+    - { src: user-worker.conf, dest: /etc/supervisor/conf.d/user-worker.conf }
+    - { src: album-worker.conf, dest: /etc/supervisor/conf.d/album-worker.conf }
+    - { src: photo-worker.conf, dest: /etc/supervisor/conf.d/photo-worker.conf }
   notify:
-      - restart download worker
+      - restart user worker
+      - restart album worker
+      - restart photo worker

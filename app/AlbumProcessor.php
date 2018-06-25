@@ -7,6 +7,7 @@ use Enqueue\Util\JSON;
 use Interop\Queue\PsrContext;
 use Interop\Queue\PsrMessage;
 use Interop\Queue\PsrProcessor;
+use VK\Exceptions\VKApiException;
 
 class AlbumProcessor implements PsrProcessor
 {
@@ -35,10 +36,15 @@ class AlbumProcessor implements PsrProcessor
      */
     public function process(PsrMessage $message, PsrContext $context)
     {
+        // TODO: log
         $vkAlbum = JSON::decode($message->getBody());
-        $photos = $this->client->iteratePhotos($vkAlbum['owner_id'], $vkAlbum['id'], 20);
-        foreach ($photos as $photo) {
-            $this->photoQueue->send(JSON::encode($photo));
+        try {
+            $photos = $this->client->iteratePhotos($vkAlbum['owner_id'], $vkAlbum['id'], 20);
+            foreach ($photos as $photo) {
+                $this->photoQueue->send(JSON::encode($photo));
+            }
+        } catch (VKApiException $e) {
+            return self::REJECT;
         }
 
         return self::ACK;

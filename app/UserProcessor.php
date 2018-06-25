@@ -41,6 +41,7 @@ class UserProcessor implements PsrProcessor
      */
     public function process(PsrMessage $message, PsrContext $context)
     {
+        // TODO: log
         $vkUserId = JSON::decode($message->getBody());
         try {
             $vkUser = $this->getVkUser($vkUserId);

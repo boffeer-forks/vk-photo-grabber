@@ -1,5 +1,15 @@
 ---
-- name: restart download worker
+- name: restart user worker
   supervisorctl:
-    name="download-worker:"
+    name="user-worker:"
+    state=restarted
+
+- name: restart album worker
+  supervisorctl:
+    name="album-worker:"
+    state=restarted
+
+- name: restart photo worker
+  supervisorctl:
+    name="photo-worker:"
     state=restarted

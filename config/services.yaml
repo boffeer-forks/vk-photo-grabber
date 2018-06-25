@@ -89,6 +89,7 @@ services:
         class: app\PhotoProcessor
         arguments:
             - '@vk_image_downloader'
+            - '@storage'
 
     app_vk_client:
         class: app\VkClient

@@ -54,32 +54,46 @@ class Storage
 
     public function saveAlbum(array $vkAlbum)
     {
-        $user = $this->db->queryOne('
-            SELECT *
-            FROM `album`
-            WHERE `vk_album_id` = :vk_album_id
-        ', [
-            ':vk_album_id' => $vkAlbum['id']
-        ]);
-
-        if ($user) {
-            $this->db->execute('
-                UPDATE `album`
-                SET title = :title
-                WHERE `vk_album_id` = :vk_album_id
-            ', [
-                ':title'  => $vkAlbum['title'],
-                ':vk_album_id' => $vkAlbum['id']
-            ]);
-        } else {
-            $this->db->execute('
+        $this->db->execute('
                 INSERT INTO `album`(vk_album_id, vk_user_id, title)
                 VALUES (:vk_album_id, :vk_user_id, :title)
+                ON DUPLICATE KEY UPDATE title = :title;
             ', [
-                ':vk_album_id' => $vkAlbum['id'],
-                ':vk_user_id' => $vkAlbum['owner_id'],
-                ':title'  => $vkAlbum['title']
-            ]);
-        }
+            ':vk_album_id' => $vkAlbum['id'],
+            ':vk_user_id' => $vkAlbum['owner_id'],
+            ':title'  => $vkAlbum['title']
+        ]);
+    }
+
+    /**
+     * @param int $vkPhotoId
+     * @return bool
+     */
+    public function photoExists(int $vkPhotoId)
+    {
+        $photo = $this->db->queryOne('
+            SELECT *
+            FROM `photo`
+            WHERE vk_photo_id = :vk_photo_id
+        ', [
+            ':vk_photo_id' => $vkPhotoId
+        ]);
+
+        return !!$photo;
+    }
+
+    /**
+     * @param array $vkPhoto
+     */
+    public function savePhoto(array $vkPhoto)
+    {
+        $this->db->execute('
+                INSERT IGNORE INTO `photo`(vk_photo_id, vk_album_id, vk_url)
+                VALUES (:vk_photo_id, :vk_album_id, :vk_url)
+            ', [
+            ':vk_photo_id' => $vkPhoto['id'],
+            ':vk_album_id' => $vkPhoto['album_id'],
+            ':vk_url'      => VkImageDownloader::extractImageUrl($vkPhoto)
+        ]);
     }
 }

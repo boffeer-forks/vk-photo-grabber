@@ -1,2 +1,5 @@
 ---
 composer_github_oauth_token: ''
+
+vk_grabber_http_proxy: ''
+vk_grabber_https_proxy: ''
